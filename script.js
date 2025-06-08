@@ -150,3 +150,10 @@ document.getElementById('lang-ar').addEventListener('click', function(e) {
 // setLanguage('en');
 
 // ...existing code...
+
+
+const toggleButton = document.getElementById('toggle-menu');
+const nav = document.getElementById('nav');
+toggleButton.addEventListener('click', () => {
+  nav.classList.toggle('active');
+});

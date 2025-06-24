@@ -157,3 +157,74 @@ const nav = document.getElementById('nav');
 toggleButton.addEventListener('click', () => {
   nav.classList.toggle('active');
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  // ===== Navigation Toggle =====
+  const toggleButton = document.getElementById("toggle-menu");
+  const navMenu = document.getElementById("nav");
+
+  toggleButton.addEventListener("click", () => {
+    navMenu.classList.toggle("open");
+  });
+
+  // ===== Sticky Header on Scroll =====
+  const header = document.querySelector(".site-header");
+  window.addEventListener("scroll", () => {
+    header.classList.toggle("scrolled", window.scrollY > 50);
+  });
+
+  // ===== Scroll to Top Button =====
+  const scrollTopBtn = document.querySelector(".scroll-top");
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+      scrollTopBtn.style.display = "block";
+    } else {
+      scrollTopBtn.style.display = "none";
+    }
+  });
+
+  scrollTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  // ===== Typing Effect =====
+  const textElement = document.getElementById("dynamic-typing");
+  const phrases = ["Web Developer", "Backend Engineer", "Creative Coder"];
+  let i = 0, j = 0, currentPhrase = [], isDeleting = false;
+
+  function typeLoop() {
+    textElement.textContent = currentPhrase.join("");
+
+    if (!isDeleting && j <= phrases[i].length) {
+      currentPhrase.push(phrases[i][j]);
+      j++;
+    }
+
+    if (isDeleting && j > 0) {
+      currentPhrase.pop();
+      j--;
+    }
+
+    if (j === phrases[i].length) {
+      isDeleting = true;
+    }
+
+    if (isDeleting && j === 0) {
+      isDeleting = false;
+      i = (i + 1) % phrases.length;
+    }
+
+    setTimeout(typeLoop, isDeleting ? 60 : 100);
+  }
+
+  typeLoop();
+
+  // ===== AOS Animation Initialization (if using AOS) =====
+  if (typeof AOS !== "undefined") {
+    AOS.init({
+      duration: 800,
+      once: true,
+    });
+  }
+});

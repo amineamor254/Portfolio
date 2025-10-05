@@ -5,53 +5,645 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AmineDev Portfolio</title>
   <link rel="stylesheet" href="style.css" />
-  <link
-    rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
-  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+  <style>
+    /* Modern, clean, and animated styles */
+    body {
+      font-family: 'Inter', 'Poppins', Arial, sans-serif;
+      background: linear-gradient(120deg, #f8fafc 0%, #e3eafc 100%);
+      color: #222;
+      margin: 0;
+      padding: 0;
+    }
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2rem 5vw;
+      background: #fff;
+      box-shadow: 0 2px 16px rgba(13,110,253,0.07);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      animation: fadeInDown 1s;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .brand-logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0d6efd;
+      letter-spacing: 2px;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .brand-logo .name {
+      color: #222;
+    }
+    .main-navigation {
+      display: flex;
+      gap: 2rem;
+    }
+    .main-navigation a {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #222;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background 0.3s, color 0.3s;
+      position: relative;
+    }
+    .main-navigation a:hover, .main-navigation a.active {
+      background: #e3eafc;
+      color: #0d6efd;
+    }
+    .header-flags {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .lang-flag {
+      border-radius: 4px;
+      transition: box-shadow 0.2s, transform 0.2s;
+      padding: 2px;
+      background: transparent;
+    }
+    .lang-flag img {
+      width: 24px;
+      height: 18px;
+      border-radius: 3px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    }
+    .lang-flag:hover {
+      box-shadow: 0 2px 8px #0d6efd44;
+      transform: scale(1.12);
+      background: #e3eafc;
+    }
+    #toggle-menu {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: #0d6efd;
+      cursor: pointer;
+      margin-left: 1rem;
+    }
+    @media (max-width: 900px) {
+      .site-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.2rem 3vw;
+      }
+      .main-navigation {
+        margin: 1rem 0;
+      }
+    }
+    @media (max-width: 700px) {
+      .main-navigation {
+        display: none;
+        flex-direction: column;
+        background: #fff;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        padding: 2rem 0 1rem 0;
+        z-index: 1000;
+      }
+      .main-navigation.active {
+        display: flex;
+      }
+      #toggle-menu {
+        display: block;
+      }
+    }
+
+    /* Hero Section */
+    .hero-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4vw;
+      padding: 120px 5vw 80px 5vw;
+      min-height: 90vh;
+      background: linear-gradient(120deg, #e3eafc 0%, #f8fafc 100%);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 1.2s;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .hero-content {
+      max-width: 600px;
+      z-index: 2;
+      animation: fadeInLeft 1.2s;
+    }
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-40px);}
+      to { opacity: 1; transform: translateX(0);}
+    }
+    .hero-content h1 {
+      font-size: 3.5rem;
+      margin-bottom: 0.3rem;
+      color: #0d6efd;
+      letter-spacing: 1px;
+      font-weight: 800;
+    }
+    .highlighted-name {
+      color: #f39c12;
+      font-weight: 900;
+    }
+    .hero-tagline {
+      font-size: 1.3rem;
+      color: #555;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+      letter-spacing: 1px;
+      animation: fadeInUp 1.2s;
+    }
+    .animated-text h3 {
+      font-size: 1.5rem;
+      color: #222;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+      opacity: 0.85;
+    }
+    .hero-buttons {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 1rem;
+    }
+    .btn-primary, .btn-secondary {
+      padding: 0.8rem 2.2rem;
+      border-radius: 30px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+      border: 2px solid transparent;
+      font-size: 1.1rem;
+      box-shadow: 0 5px 15px rgba(13,110,253,0.08);
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, #0d6efd 60%, #f39c12 100%);
+      color: #fff;
+      border: none;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(90deg, #084298 60%, #f39c12 100%);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(13,110,253,0.18);
+    }
+    .btn-secondary {
+      background: #fff;
+      border: 2px solid #0d6efd;
+      color: #0d6efd;
+    }
+    .btn-secondary:hover {
+      background: #0d6efd;
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(13,110,253,0.18);
+    }
+    .social-media-links {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1.2rem;
+    }
+    .social-media-links a {
+      font-size: 1.7rem;
+      color: #0d6efd;
+      transition: color 0.3s, transform 0.3s;
+    }
+    .social-media-links a:hover {
+      color: #f39c12;
+      transform: scale(1.15);
+    }
+    .hero-image-wrapper {
+      max-width: 350px;
+      min-width: 220px;
+      text-align: center;
+      z-index: 2;
+      animation: fadeInRight 1.2s;
+    }
+    @keyframes fadeInRight {
+      from { opacity: 0; transform: translateX(40px);}
+      to { opacity: 1; transform: translateX(0);}
+    }
+    .glow-effect {
+      border-radius: 50%;
+      padding: 10px;
+      background: radial-gradient(circle at center, #0d6efd 0%, #f39c12 100%);
+      box-shadow: 0 0 40px 10px #0d6efd44;
+      transition: box-shadow 0.3s;
+      display: inline-block;
+    }
+    .glow-effect:hover {
+      box-shadow: 0 0 60px 20px #f39c1244;
+    }
+    .hero-image {
+      border-radius: 50%;
+      width: 220px;
+      height: 220px;
+      object-fit: cover;
+      border: 5px solid #fff;
+      box-shadow: 0 2px 24px #0d6efd22;
+      transition: transform 0.4s;
+    }
+    .hero-image:hover {
+      transform: scale(1.08) rotate(3deg);
+    }
+    @media (max-width: 900px) {
+      .hero-section {
+        flex-direction: column;
+        text-align: center;
+        padding: 80px 3vw 40px 3vw;
+      }
+      .hero-content {
+        max-width: 100%;
+        margin-bottom: 2rem;
+      }
+      .hero-image-wrapper {
+        margin: 0 auto;
+      }
+    }
+
+    /* About Section */
+    .about-section {
+      background: #fff;
+      padding: 6rem 5vw 5rem;
+      text-align: center;
+      box-shadow: 0 2px 16px rgba(13,110,253,0.07);
+      border-radius: 24px;
+      margin: 3rem 0;
+      animation: fadeInUp 1.2s;
+    }
+    .about-wrapper {
+      display: flex;
+      gap: 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .about-photo img {
+      max-width: 350px;
+      border-radius: 18px;
+      box-shadow: 0 8px 20px #0d6efd22;
+      transition: transform 0.3s;
+    }
+    .about-photo img:hover {
+      transform: scale(1.05);
+    }
+    .about-description {
+      max-width: 600px;
+      color: #555;
+      text-align: left;
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+    .about-description h3 {
+      color: #0d6efd;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+    .about-description .btn-primary {
+      margin-top: 1.5rem;
+      padding: 0.6rem 2rem;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    @media (max-width: 900px) {
+      .about-wrapper {
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .about-description {
+        text-align: center;
+      }
+    }
+
+    /* Skills Section */
+    .skills-section {
+      background: #e3eafc;
+      padding: 6rem 5vw 6rem;
+      text-align: center;
+      border-radius: 24px;
+      margin: 3rem 0;
+      animation: fadeInUp 1.2s;
+    }
+    .skills-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .skill-category {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 18px;
+      width: 280px;
+      box-shadow: 0 4px 15px #0d6efd11;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: default;
+      animation: fadeInUp 1.2s;
+    }
+    .skill-category:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 12px 25px #0d6efd22;
+    }
+    .skill-category h3 {
+      margin-bottom: 0.8rem;
+      color: #0d6efd;
+      font-weight: 700;
+    }
+    .skill-category p {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 1rem;
+      min-height: 60px;
+    }
+    .skills-tags span {
+      display: inline-block;
+      background: #0d6efd;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 20px;
+      margin: 4px 5px 0 0;
+      font-size: 0.85rem;
+      transition: background 0.3s;
+    }
+    .skills-tags span:hover {
+      background: #f39c12;
+      color: #fff;
+    }
+
+    /* Portfolio Section */
+    .portfolio-section {
+      background: #fff;
+      padding: 6rem 5vw 6rem;
+      text-align: center;
+      border-radius: 24px;
+      margin: 3rem 0;
+      animation: fadeInUp 1.2s;
+    }
+    .portfolio-wrapper {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .project-item {
+      background: #e3eafc;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px #0d6efd11;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      animation: fadeInUp 1.2s;
+    }
+    .project-item:hover {
+      transform: translateY(-12px) scale(1.03);
+      box-shadow: 0 15px 40px #0d6efd22;
+    }
+    .project-image img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+    .project-item:hover .project-image img {
+      transform: scale(1.1);
+    }
+    .project-overlay {
+      background: rgba(13,110,253,0.85);
+      color: #fff;
+      border-radius: 0 0 18px 18px;
+      padding: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .project-item:hover .project-overlay {
+      opacity: 1;
+    }
+    .project-links {
+      margin-top: 1rem;
+    }
+    .project-links a {
+      color: #fff;
+      margin-right: 1rem;
+      font-size: 1.25rem;
+      transition: color 0.3s;
+    }
+    .project-links a:hover {
+      color: #f39c12;
+    }
+
+    /* Contact Section */
+    .contact-section {
+      background: #e3eafc;
+      padding: 6rem 5vw 6rem;
+      max-width: 1100px;
+      margin: 3rem auto 5rem;
+      border-radius: 24px;
+      box-shadow: 0 8px 25px #0d6efd11;
+      animation: fadeInUp 1.2s;
+    }
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .form-row input {
+      flex: 1;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      background: #fff;
+      color: #222;
+      transition: background 0.3s;
+      box-shadow: 0 2px 8px #0d6efd11;
+    }
+    .form-row input:focus {
+      background: #e3eafc;
+      outline: none;
+      box-shadow: 0 0 10px #0d6efd44;
+    }
+    textarea {
+      padding: 1rem;
+      border-radius: 12px;
+      border: none;
+      background: #fff;
+      color: #222;
+      font-size: 1rem;
+      resize: vertical;
+      transition: background 0.3s;
+      box-shadow: 0 2px 8px #0d6efd11;
+    }
+    textarea:focus {
+      background: #e3eafc;
+      outline: none;
+      box-shadow: 0 0 10px #0d6efd44;
+    }
+    .contact-form button {
+      align-self: flex-start;
+      padding: 0.75rem 2.5rem;
+      font-weight: 700;
+      border-radius: 30px;
+      border: none;
+      background: linear-gradient(90deg, #0d6efd 60%, #f39c12 100%);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 6px 18px #0d6efd22;
+      transition: background 0.3s, box-shadow 0.3s;
+      font-size: 1.1rem;
+    }
+    .contact-form button:hover {
+      background: linear-gradient(90deg, #084298 60%, #f39c12 100%);
+      box-shadow: 0 10px 25px #0d6efd44;
+    }
+    .contact-details {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .contact-card i {
+      color: #0d6efd;
+      margin-right: 0.5rem;
+    }
+    .map-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: 2rem auto 0;
+      padding-bottom: 56.25%; 
+      height: 0;
+      overflow: hidden;
+      border-radius: 18px;
+      box-shadow: 0 2px 16px #0d6efd11;
+    }
+    .map-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      border-radius: 18px;
+    }
+
+    /* Footer */
+    .site-footer {
+      background: #0d6efd;
+      color: #fff;
+      text-align: center;
+      padding: 2rem 5vw;
+      font-size: 1rem;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      box-shadow: 0 -2px 16px #0d6efd11;
+      position: relative;
+      margin-top: 3rem;
+      animation: fadeInUp 1.2s;
+    }
+    .scroll-top {
+      padding: 15px;
+      background: #f39c12;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 1.3rem;
+      position: absolute;
+      top: -30px;
+      right: 30px;
+      box-shadow: 0 2px 8px #0d6efd22;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .scroll-top:hover {
+      background: #0d6efd;
+      transform: scale(1.15);
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 700px) {
+      .about-section, .skills-section, .portfolio-section, .contact-section {
+        padding: 3rem 2vw;
+        border-radius: 12px;
+        margin: 2rem 0;
+      }
+      .site-footer {
+        padding: 1rem 2vw;
+        font-size: 0.9rem;
+        border-radius: 12px 12px 0 0;
+      }
+      .scroll-top {
+        right: 10px;
+        top: -20px;
+        font-size: 1.1rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
   <!-- ======= Site Header ======= -->
- <header class="site-header">
-  <a href="#" class="brand-logo">Amine_<span class="name">Dev</span></a>
-  <button id="toggle-menu" aria-label="Toggle Navigation Menu">☰</button>
-  <nav class="main-navigation" id="nav">
-    <a href="#home-section">Home</a>
-    <a href="#about-section">About</a>
-    <a href="#portfolio-section">Portfolio</a>
-    <a href="#contact-section">Contact</a>
-  </nav>
-  <div class="header-flags">
-    <a href="#" id="lang-en" class="lang-flag" aria-label="Switch to English" title="English"><img src="https://flagcdn.com/24x18/gb.png" alt="English" /></a>
-    <a href="#" id="lang-fr" class="lang-flag" aria-label="Passer en français" title="Français"><img src="https://flagcdn.com/24x18/fr.png" alt="Français" /></a>
-    <a href="#" id="lang-ar" class="lang-flag" aria-label="التبديل إلى العربية" title="العربية"><img src="https://flagcdn.com/24x18/sa.png" alt="العربية" /></a>
-  </div>
-</header>
+  <header class="site-header">
+    <a href="#" class="brand-logo">Amine_<span class="name">Dev</span></a>
+    <button id="toggle-menu" aria-label="Toggle Navigation Menu">☰</button>
+    <nav class="main-navigation" id="nav">
+      <a href="#home-section" class="active">Home</a>
+      <a href="#about-section">About</a>
+      <a href="#portfolio-section">Portfolio</a>
+      <a href="#contact-section">Contact</a>
+    </nav>
+    <div class="header-flags">
+      <a href="#" id="lang-en" class="lang-flag" aria-label="Switch to English" title="English"><img src="https://flagcdn.com/24x18/gb.png" alt="English" /></a>
+      <a href="#" id="lang-fr" class="lang-flag" aria-label="Passer en français" title="Français"><img src="https://flagcdn.com/24x18/fr.png" alt="Français" /></a>
+      <a href="#" id="lang-ar" class="lang-flag" aria-label="التبديل إلى العربية" title="العربية"><img src="https://flagcdn.com/24x18/sa.png" alt="العربية" /></a>
+    </div>
+  </header>
 
-  <!-- ======= Home Section ======= -->
+  <!-- ======= Hero Section ======= -->
   <section class="hero-section" id="home-section">
-    <div class="hero-particles"></div>
     <div class="hero-content">
       <h1>Hi, I'm <span class="highlighted-name">Amine</span></h1>
+      <p class="hero-tagline">Building modern web experiences for ambitious brands.</p>
       <div class="animated-text">
         <h3>Full-Stack Developer</h3>
       </div>
-      <p id="dynamic-typing"></p>
-
+      <div class="hero-buttons">
+        <a href="#contact-section" class="btn-primary">Let's Connect</a>
+        <a href="#portfolio-section" class="btn-secondary">View Projects</a>
+      </div>
       <div class="social-media-links">
         <a href="https://www.linkedin.com/in/amine-amor-381407322/" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
         <a href="https://github.com/amineamor254" aria-label="GitHub"><i class="fab fa-github"></i></a>
         <a href="https://x.com/WebDeveloperI21" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
         <a href="https://www.facebook.com/aas.amar.90/" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
       </div>
-
-      <div class="hero-buttons">
-        <a href="#contact-section" class="btn-primary">Let's Connect</a>
-        <a href="#portfolio-section" class="btn-secondary">Projects</a>
-      </div>
     </div>
-
     <div class="hero-image-wrapper">
       <div class="glow-effect">
         <img src="img/avatar.jpg" alt="Developer Amine" class="hero-image" />
@@ -69,9 +661,7 @@
       <div class="about-description">
         <h3>Passionate Full-Stack Developer</h3>
         <p>
-    Hello! I am Amine, a web developer specializing in creating dynamic websites using HTML, CSS, and JavaScript. I have strong skills in application development with PHP and MySQL. I excel at designing efficient databases and developing interactive websites tailored to clients’ needs. I am dedicated to delivering innovative and high-quality software solutions.
-
-
+          Hello! I am Amine, a web developer specializing in creating dynamic websites using HTML, CSS, and JavaScript. I have strong skills in application development with PHP and MySQL. I excel at designing efficient databases and developing interactive websites tailored to clients’ needs. I am dedicated to delivering innovative and high-quality software solutions.
         </p>
         <a href="#" class="btn-primary">Download CV</a>
       </div>
@@ -82,7 +672,6 @@
   <section class="skills-section" id="skills-section">
     <h2 class="section-title">My <span>Skills</span></h2>
     <div class="skills-wrapper">
-
       <div class="skill-category">
         <h3>Front-End</h3>
         <p>Creating modern, responsive, and user-friendly interfaces using cutting-edge web technologies.</p>
@@ -94,7 +683,6 @@
           <span>Tailwind CSS</span>
         </div>
       </div>
-
       <div class="skill-category">
         <h3>Back-End</h3>
         <p>Building scalable, maintainable, and secure server-side applications and APIs.</p>
@@ -105,7 +693,6 @@
           <span>Node.js</span>
         </div>
       </div>
-
       <div class="skill-category">
         <h3>Databases</h3>
         <p>Designing and managing efficient databases for optimal data storage and retrieval.</p>
@@ -116,83 +703,74 @@
           <span>Entity Framework</span>
         </div>
       </div>
-
       <div class="skill-category">
-      <h3>Tools & Version Control</h3>
-      <p>Using essential development tools for version control, collaboration, and workflow optimization.</p>
-      <div class="skills-tags">
-        <span>Git</span>
-        <span>GitHub</span>
-        <span>Docker</span>
-        <span>VS Code</span>
-        <span>Postman</span>
+        <h3>Tools & Version Control</h3>
+        <p>Using essential development tools for version control, collaboration, and workflow optimization.</p>
+        <div class="skills-tags">
+          <span>Git</span>
+          <span>GitHub</span>
+          <span>Docker</span>
+          <span>VS Code</span>
+          <span>Postman</span>
+        </div>
       </div>
-    </div>
-
-    <div class="skill-category">
-  <h3>Digital Marketing</h3>
-  <p>Promoting brands and products using digital channels, analytics, and creative strategies.</p>
-  <div class="skills-tags">
-    <span>SEO</span>
-    <span>Google Analytics</span>
-    <span>Content Marketing</span>
-    <span>Social Media</span>
-    <span>Email Marketing</span>
-  </div>
-</div>
+      <div class="skill-category">
+        <h3>Digital Marketing</h3>
+        <p>Promoting brands and products using digital channels, analytics, and creative strategies.</p>
+        <div class="skills-tags">
+          <span>SEO</span>
+          <span>Google Analytics</span>
+          <span>Content Marketing</span>
+          <span>Social Media</span>
+          <span>Email Marketing</span>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- ======= Project Section ======= -->
+  <!-- ======= Portfolio Section ======= -->
   <section class="portfolio-section" id="portfolio-section">
     <h2 class="section-title">Recent <span>Projects</span></h2>
     <div class="portfolio-wrapper">
-
-     
-    <article class="project-item">
-      <div class="project-image">
-        <img src="img/cal.jpg.png" alt="Calories Counter Screenshot" />
-        <div class="project-overlay">
-          <h4>Calories Counter</h4>
-          <p>A user-friendly calorie counter built using front-end technologies to monitor daily food intake.</p>
-          <div class="project-links">
-            <a href="https://github.com/amineamor254/calories-counter.git" target="_blank" aria-label="View on GitHub"><i class="fab fa-github"></i></a>
-            <a href="https://amineamor254.github.io/calories-counter/" aria-label="View Project Details">→</a>
+      <article class="project-item">
+        <div class="project-image">
+          <img src="img/cal.jpg.png" alt="Calories Counter Screenshot" />
+          <div class="project-overlay">
+            <h4>Calories Counter</h4>
+            <p>A user-friendly calorie counter built using front-end technologies to monitor daily food intake.</p>
+            <div class="project-links">
+              <a href="https://github.com/amineamor254/calories-counter.git" target="_blank" aria-label="View on GitHub"><i class="fab fa-github"></i></a>
+              <a href="https://amineamor254.github.io/calories-counter/" aria-label="View Project Details">→</a>
+            </div>
           </div>
         </div>
-      </div>
-    </article>
-
-    <article class="project-item">
-      <div class="project-image">
-        <img src="img/ClinicApp.jpg.png" alt="ClinicApp Screenshot" />
-        <div class="project-overlay">
-          <h4>ClinicApp</h4>
-          <p>Clinic management system built with HTML, CSS, JavaScript, and PHP, enabling easy management of patient records, appointments, and billing.</p>
-          <div class="project-links">
-            <a href="https://github.com/amineamor254/Clinic-booking.git" target="_blank" aria-label="View on GitHub"><i class="fab fa-github"></i></a>
-            <a href="#" aria-label="View Project Details">→</a>
+      </article>
+      <article class="project-item">
+        <div class="project-image">
+          <img src="img/ClinicApp.jpg.png" alt="ClinicApp Screenshot" />
+          <div class="project-overlay">
+            <h4>ClinicApp</h4>
+            <p>Clinic management system built with HTML, CSS, JavaScript, and PHP, enabling easy management of patient records, appointments, and billing.</p>
+            <div class="project-links">
+              <a href="https://github.com/amineamor254/Clinic-booking.git" target="_blank" aria-label="View on GitHub"><i class="fab fa-github"></i></a>
+              <a href="#" aria-label="View Project Details">→</a>
+            </div>
           </div>
         </div>
-      </div>
-    </article>
-
-
-    
-    <article class="project-item">
-      <div class="project-image">
-        <img src="img/Amigos food.jpg.png" alt="Amigos food Screenshot" />
-        <div class="project-overlay">
-          <h4>landing page</h4>
-          <p>A modern and responsive restaurant website built with HTML, CSS featuring a clean design that showcases the menu and contact information clearly.</p>
-          <div class="project-links">
-            <a href="https://github.com/amineamor254/Restaurant-Website.git" target="_blank" aria-label="View on GitHub"><i class="fab fa-github"></i></a>
-            <a href="https://amineamor254.github.io/Restaurant-Website/" aria-label="View Project Details">→</a>
+      </article>
+      <article class="project-item">
+        <div class="project-image">
+          <img src="img/Amigos food.jpg.png" alt="Amigos food Screenshot" />
+          <div class="project-overlay">
+            <h4>Landing Page</h4>
+            <p>A modern and responsive restaurant website built with HTML, CSS featuring a clean design that showcases the menu and contact information clearly.</p>
+            <div class="project-links">
+              <a href="https://github.com/amineamor254/Restaurant-Website.git" target="_blank" aria-label="View on GitHub"><i class="fab fa-github"></i></a>
+              <a href="https://amineamor254.github.io/Restaurant-Website/" aria-label="View Project Details">→</a>
+            </div>
           </div>
         </div>
-      </div>
-    </article>
-
+      </article>
     </div>
   </section>
 
@@ -211,7 +789,6 @@
       <textarea name="message" rows="8" placeholder="Your Message" required></textarea>
       <button type="submit" class="btn-primary">Send Message</button>
     </form>
-
     <aside class="contact-details">
       <div class="contact-card">
         <p><i class="fas fa-envelope"></i> 
@@ -223,7 +800,6 @@
         <p><i class="fas fa-map-marker-alt"></i> Mellita Djerba, Tunisia</p>
       </div>
     </aside>
-
     <div class="map-wrapper">
       <iframe
         src="https://www.google.com/maps/embed?pb=!1m17!1m8!1m3!1d828.218267737375!2d10.8073455!3d33.8671619!3m2!1i1024!2i768!4f13.1!4m6!3e6!4m0!4m3!3m2!1d33.8669358!2d10.806857299999999!5e0!3m2!1sen!2stn!4v1747753720783!5m2!1sen!2stn"
@@ -244,6 +820,17 @@
     <a href="#home-section" class="scroll-top" aria-label="Scroll to top">↑</a>
   </footer>
 
+  <script>
+    // Responsive navigation toggle
+    document.getElementById('toggle-menu').addEventListener('click', function() {
+      document.querySelector('.main-navigation').classList.toggle('active');
+    });
+    // Optional: Smooth scroll for scroll-top
+    document.querySelector('.scroll-top').addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById('home-section').scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+  <script src="script.js"></script>
 </body>
-<script src="script.js"></script>
 </html>

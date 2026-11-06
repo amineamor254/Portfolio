@@ -2,43 +2,51 @@
 
 document.documentElement.classList.add('js');
 
-const nav = document.getElementById('nav');
 const navToggle = document.getElementById('nav-toggle');
-const navLinks = Array.from(document.querySelectorAll('.nav-link'));
-const scrollTopButton = document.getElementById('scrollTopBtn');
-const contactForm = document.getElementById('contactForm');
+const navigation = document.getElementById('primary-navigation');
+const navLinks = [...document.querySelectorAll('.nav-link')];
+const themeToggle = document.getElementById('theme-toggle');
+const scrollTopButton = document.getElementById('scroll-top');
 
-function setNavigationOpen(isOpen) {
-  if (!nav || !navToggle) return;
-  nav.classList.toggle('show', isOpen);
-  navToggle.setAttribute('aria-expanded', String(isOpen));
+function setMenuOpen(open) {
+  navigation?.classList.toggle('open', open);
+  navToggle?.setAttribute('aria-expanded', String(open));
+  navToggle?.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+  document.body.classList.toggle('menu-open', open);
 }
 
-if (nav && navToggle) {
-  navToggle.addEventListener('click', () => {
-    const isOpen = navToggle.getAttribute('aria-expanded') !== 'true';
-    setNavigationOpen(isOpen);
+navToggle?.addEventListener('click', () => {
+  setMenuOpen(navToggle.getAttribute('aria-expanded') !== 'true');
+});
 
-    if (isOpen) {
-      nav.querySelector('a')?.focus();
-    }
-  });
+navLinks.forEach((link) => link.addEventListener('click', () => setMenuOpen(false)));
 
-  navLinks.forEach((link) => {
-    link.addEventListener('click', () => setNavigationOpen(false));
-  });
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    setMenuOpen(false);
+    navToggle?.focus();
+  }
+});
 
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && navToggle.getAttribute('aria-expanded') === 'true') {
-      setNavigationOpen(false);
-      navToggle.focus();
-    }
-  });
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 760) setMenuOpen(false);
+});
 
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 700) setNavigationOpen(false);
-  });
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  themeToggle?.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0b1011' : '#f5f7f2');
 }
+
+const savedTheme = localStorage.getItem('portfolio-theme');
+const preferredTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+applyTheme(savedTheme || preferredTheme);
+
+themeToggle?.addEventListener('click', () => {
+  const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(nextTheme);
+  localStorage.setItem('portfolio-theme', nextTheme);
+});
 
 const sections = navLinks
   .map((link) => document.querySelector(link.getAttribute('href')))
@@ -46,22 +54,18 @@ const sections = navLinks
 
 if ('IntersectionObserver' in window) {
   const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      navLinks.forEach((link) => {
-        const isActive = link.getAttribute('href') === `#${entry.target.id}`;
-        link.classList.toggle('active', isActive);
+    const visible = entries
+      .filter((entry) => entry.isIntersecting)
+      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-        if (isActive) {
-          link.setAttribute('aria-current', 'location');
-        } else {
-          link.removeAttribute('aria-current');
-        }
-      });
+    if (!visible) return;
+    navLinks.forEach((link) => {
+      const active = link.getAttribute('href') === `#${visible.target.id}`;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
     });
-  }, {
-    rootMargin: '-30% 0px -60% 0px',
-  });
+  }, { rootMargin: '-25% 0px -65% 0px', threshold: [0, 0.1, 0.25] });
 
   sections.forEach((section) => sectionObserver.observe(section));
 
@@ -71,112 +75,75 @@ if ('IntersectionObserver' in window) {
       entry.target.classList.add('active');
       observer.unobserve(entry.target);
     });
-  }, {
-    threshold: 0.12,
-    rootMargin: '0px 0px -36px 0px',
-  });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
   document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
 } else {
   document.querySelectorAll('.reveal').forEach((element) => element.classList.add('active'));
 }
 
-function updateScrollTopButton() {
-  if (!scrollTopButton) return;
-  scrollTopButton.classList.toggle('visible', window.scrollY > 320);
+function updateScrollControls() {
+  scrollTopButton?.classList.toggle('visible', window.scrollY > 320);
 }
 
-if (scrollTopButton) {
-  window.addEventListener('scroll', updateScrollTopButton, { passive: true });
-  updateScrollTopButton();
-  scrollTopButton.addEventListener('click', () => {
-    window.scrollTo({
-      top: 0,
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+window.addEventListener('scroll', updateScrollControls, { passive: true });
+updateScrollControls();
+
+scrollTopButton?.addEventListener('click', () => {
+  window.scrollTo({
+    top: 0,
+    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+  });
+});
+
+document.querySelectorAll('.filter-button').forEach((button) => {
+  button.addEventListener('click', () => {
+    const filter = button.dataset.filter;
+    document.querySelectorAll('.filter-button').forEach((item) => {
+      const active = item === button;
+      item.classList.toggle('active', active);
+      item.setAttribute('aria-pressed', String(active));
+    });
+
+    document.querySelectorAll('.project-card').forEach((card) => {
+      card.classList.toggle('hidden', filter !== 'all' && card.dataset.category !== filter);
     });
   });
-}
+});
 
-function showToast(message, isError = false) {
-  let container = document.querySelector('.toast-container');
+const contactForm = document.getElementById('contact-form');
+const formStatus = document.getElementById('form-status');
 
-  if (!container) {
-    container = document.createElement('div');
-    container.className = 'toast-container';
-    container.setAttribute('aria-live', 'polite');
-    container.setAttribute('aria-atomic', 'true');
-    document.body.appendChild(container);
-  }
+contactForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (!contactForm.reportValidity()) return;
 
-  const toast = document.createElement('div');
-  toast.className = `toast ${isError ? 'error' : 'success'}`;
-  toast.setAttribute('role', 'status');
-  toast.textContent = message;
-  container.appendChild(toast);
-
-  requestAnimationFrame(() => toast.classList.add('show'));
-  window.setTimeout(() => {
-    toast.classList.remove('show');
-    window.setTimeout(() => toast.remove(), 200);
-  }, 4000);
-}
-
-window.pageShowToast = showToast;
-
-if (contactForm) {
-  const formStatus = document.getElementById('formStatus');
   const submitButton = contactForm.querySelector('button[type="submit"]');
-  const defaultButtonText = submitButton?.innerHTML ?? '';
+  submitButton.disabled = true;
+  submitButton.textContent = 'Sending…';
+  formStatus.textContent = 'Sending your message…';
+  formStatus.className = 'form-status';
 
-  contactForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    if (!contactForm.reportValidity()) return;
+  try {
+    const response = await fetch('https://formspree.io/f/manjeneq', {
+      method: 'POST',
+      body: new FormData(contactForm),
+      headers: { Accept: 'application/json' },
+    });
 
-    if (formStatus) {
-      formStatus.textContent = 'Sending your message…';
-      formStatus.className = 'form-status';
-    }
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.textContent = 'Sending…';
-    }
+    if (!response.ok) throw new Error(`Form submission failed (${response.status})`);
 
-    try {
-      const response = await fetch('https://formspree.io/f/manjeneq', {
-        method: 'POST',
-        body: new FormData(contactForm),
-        headers: { Accept: 'application/json' },
-      });
+    contactForm.reset();
+    formStatus.textContent = 'Thanks. Your message has been sent.';
+    formStatus.classList.add('success');
+  } catch (error) {
+    console.error(error);
+    formStatus.textContent = 'The message could not be sent. Please email me directly.';
+    formStatus.classList.add('error');
+  } finally {
+    submitButton.disabled = false;
+    submitButton.innerHTML = 'Send message <span aria-hidden="true">↗</span>';
+  }
+});
 
-      if (!response.ok) {
-        const error = new Error(`Contact form submission failed with status ${response.status}.`);
-        console.error(error);
-        if (formStatus) {
-          formStatus.textContent = 'Your message could not be sent. Please email me directly instead.';
-          formStatus.classList.add('error');
-        }
-        showToast('Message could not be sent. Please try emailing me.', true);
-        return;
-      }
-
-      contactForm.reset();
-      if (formStatus) {
-        formStatus.textContent = 'Thanks for reaching out. Your message has been sent.';
-        formStatus.classList.add('success');
-      }
-      showToast('Your message has been sent.');
-    } catch (error) {
-      console.error('Contact form request failed:', error);
-      if (formStatus) {
-        formStatus.textContent = 'A network error prevented sending. Please email me directly instead.';
-        formStatus.classList.add('error');
-      }
-      showToast('Network error. Please try emailing me.', true);
-    } finally {
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.innerHTML = defaultButtonText;
-      }
-    }
-  });
-}
+document.getElementById('current-year').textContent = String(new Date().getFullYear());
